@@ -1,0 +1,223 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+  <script src="{% static 'core/js/phaser.min.js' %}"></script>
+  <script src="https://kit.fontawesome.com/b3c2293037.js"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="swiper-container swiper-container-v">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="swiper-container swiper-container-h">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide swiper__first-page">
+              <div class="first-page__box">
+                <div class="first-page__box-inner">
+                  <div>Van Dijk'DOR</div>
+                  <div>반다이크'도르</div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide swiper__second-page"></div>
+            <div class="swiper-slide swiper__first-page"></div>
+          </div>
+          <div class="swiper-pagination swiper-pagination-h swiper-pagination-progressbar"
+               id="swiper-pagination-progressbar__custom"></div>
+        </div>
+      </div>
+      <div class="swiper-slide main-slide">
+        <div id="main-slide__canvas-wrapper">
+          <canvas id="canvas" tabindex="1" style="z-index: 200;"></canvas>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="swiper-slide__box">
+          <div class="ranking_board">
+            <div class="ranking_board__title-box">
+              <div class="ranking_board__title">Ranking Board</div>
+              <span class="ranking_board__refresh-button" onclick="refreshScoreBoard()">
+                <i class="fas fa-sync-alt"></i>
+              </span>
+            </div>
+            <div class="ranking_board__score-list">
+              <div class="ranking_board__score-header">
+                <div class="ranking_board__info">
+                  <div>순위</div>
+                  <div>
+                    유저 정보
+                  </div>
+                </div>
+                <div>점수</div>
+              </div>
+              <div class="ranking_board__score-body">
+                {% for score in score_list %}
+                  <div class="ranking_board__score-item">
+                    <div class="ranking_board__info">
+                      <div>{{ forloop.counter }}위</div>
+                      <div>
+                        {{ score.user }}
+                        <small>({{ score.user.last_name }}{{ score.user.first_name }})</small>
+                      </div>
+                    </div>
+                    <div>{{ score }}</div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <div class="footer__title">
+              Van Dijk'DOR
+              <small>Copyright, M.G&J.W Corp. All rights reserved.</small>
+            </div>
+            <hr>
+            <div class="footer__main">
+              <div class="footer__left">
+                <div class="footer__left-title">
+                  Developer
+                </div>
+                <div class="footer__left-inner">
+                  <div class="footer__left__image-box">
+                    <img src="{% static 'core/images/kmg.png' %}" alt="">
+                  </div>
+                  <div class="footer__left__info">
+                    <div>Kim Min-gu</div>
+                    <div>Department of Software</div>
+                    <div>18011669</div>
+                  </div>
+                </div>
+                <div class="footer__left-inner">
+                  <div class="footer__left__image-box">
+                    <img src="{% static 'core/images/ljw.png' %}" alt="">
+                  </div>
+                  <div class="footer__left__info">
+                    <div>Lee Jae-won</div>
+                    <div>Department of Software</div>
+                    <div>18011671</div>
+                  </div>
+                </div>
+              </div>
+              <div class="footer__center">
+                <span id="typed"></span>
+                <div id="typed-strings" style="display: none;">
+                  <p>Sejong University</p>
+                  <p>Department of Software</p>
+                  <p>SW Design Basis</p>
+                  <p>Team Project - Van Dijk'DOR</p>
+                </div>
+              </div>
+              <div class="footer__right">
+                <div class="footer__right-inner">
+                  <div class="footer__right-title">
+                    Game Engine
+                  </div>
+                  <div class="footer__right-info">
+                    <div class="footer__right-info__item">
+                      <div><img src="{% static 'core/images/logo_phaser.png' %}" alt=""></div>
+                      <div>Phaser</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="footer__right-inner">
+                  <div class="footer__right-title">
+                    Front-End
+                  </div>
+                  <div class="footer__right-info">
+                    <div class="footer__right-info__item">
+                      <div><img src="{% static 'core/images/logo_html.png' %}" alt=""></div>
+                      <div>HTML</div>
+                    </div>
+                    <div class="footer__right-info__item">
+                      <div><img src="{% static 'core/images/logo_css.png' %}" alt=""></div>
+                      <div>CSS</div>
+                    </div>
+                    <div class="footer__right-info__item">
+                      <div><img src="{% static 'core/images/logo_js.png' %}" alt=""></div>
+                      <div>JavaScript</div>
+                    </div>
+                    <div class="footer__right-info__item">
+                      <div><img src="{% static 'core/images/logo_swiper.png' %}" alt=""></div>
+                      <div>Swiper</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="footer__right-inner">
+                  <div class="footer__right-title">
+                    Back-End
+                  </div>
+                  <div class="footer__right-info">
+                    <div class="footer__right-info__item">
+                      <div><img src="{% static 'core/images/logo_django.jpg' %}" alt=""></div>
+                      <div>Django</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination swiper-pagination-v swiper-pagination-red"></div>
+  </div>
+{% endblock %}
+
+{% block javascript_bottom %}
+  <script>
+    let refreshScoreBoard = () => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "/api/score/", true);
+      xhr.setRequestHeader("x-csrf-token", "fetch");
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.send();
+      xhr.onreadystatechange = function (e) {
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+        if (xhr.status === 200) {
+          let json = JSON.parse(xhr.response);
+          const board = document.querySelector(".ranking_board__score-body");
+          let newBoard = "";
+          json.map((el, index) => {
+            newBoard +=
+                `<div class="ranking_board__score-item">
+                  <div class="ranking_board__info">
+                    <div>${index + 1}위</div>
+                    <div>
+                      ${el.user.email}
+                      <small>(${el.user.last_name}${el.user.first_name})</small>
+                    </div>
+                  </div>
+                  <div>${el.point}</div>
+                </div>`;
+          });
+          board.innerHTML = newBoard;
+          alert('Ranking Board가 업데이트 되었습니다.')
+        } else {
+          alert(xhr.responseText);
+        }
+      };
+    }
+  </script>
+
+  <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.9"></script>
+  <script src="{% static 'core/js/main.js' %}"></script>
+
+  <script src="{% static 'core/js/phaser.min.js' %}"></script>
+
+  <script src="{% static 'core/js/Load.js' %}"></script>
+  <script src="{% static 'core/js/StartScene.js' %}"></script>
+  <script src="{% static 'core/js/Scene1.js' %}"></script>
+  <script src="{% static 'core/js/Scene2.js' %}"></script>
+  <script src="{% static 'core/js/EndScene.js' %}"></script>
+
+  <script src="{% static 'core/js/game.js' %}"></script>
+  <script src="{% static 'core/js/explosion.js' %}"></script>
+  <script src="{% static 'core/js/beam.js' %}"></script>
+
+{% endblock %}

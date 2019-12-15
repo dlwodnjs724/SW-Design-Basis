@@ -1,0 +1,17 @@
+<form action="{% url 'accounts:signup' %}" method="post">
+  {% csrf_token %}
+  <div>
+    {{ form.email.label }}
+    {{ form.email }}
+  </div>
+  <div>
+    {{ form.password1.label }}
+    {{ form.password1 }}
+  </div>
+  <div>
+    {{ form.password2.label }}
+    {{ form.password2 }}
+  </div>
+  {{ form.errors }}
+  <button type="submit">가입</button>
+</form>
