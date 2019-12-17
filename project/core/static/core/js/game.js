@@ -18,7 +18,11 @@ var config = {
       debug: false
     }
   },
-  canvas: document.querySelector('#canvas')
+  audio: {
+    disableWebAudio: true
+  },
+  canvas: document.querySelector('#canvas'),
+  audioTag: document.querySelector("#champions_audio")
 };
 
 

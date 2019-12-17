@@ -4,38 +4,37 @@ from django.shortcuts import render, redirect
 
 from accounts.decorators import login_forbidden
 from accounts.forms import SignUpForm, LoginForm
+from accounts.models import User
 
 
 @login_forbidden
 def signup(request):
-    form = SignUpForm(request.POST or None)
     if request.method == 'POST':
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.username = form.cleaned_data.get('email')
-            user.save()
-            user = authenticate(username=user.username, password=form.cleaned_data.get('password1'))
-            auth.login(request, user)
-            return redirect('core:main')
-    return render(request, 'accounts/signup.html', {
-        'form': form,
-    })
+        signup_data = {
+            "email": request.POST.get('email'),
+            "password": request.POST.get('password'),
+            "first_name": request.POST.get('first_name'),
+            "last_name": request.POST.get('last_name'),
+        }
+        user = User.objects.create_user(**signup_data)
+        user = authenticate(email=user.email, password=signup_data['password'])
+        auth.login(request, user)
+        print(2)
+        return redirect('core:main')
+    print(1)
+    return render(request, 'core/main.html')
 
 
 @login_forbidden
 def login(request):
-    form = LoginForm(request.POST or None)
     if request.method == 'POST':
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=email, password=password)
-            if user is not None:
-                auth.login(request, user)
-                return redirect('core:main')
-    return render(request, 'accounts/login.html', {
-        'form': form,
-    })
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('core:main')
+    return render(request, 'core/main.html')
 
 
 def logout(request):

@@ -5,11 +5,35 @@
 {% block css %}
   <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
   <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+  <link rel="stylesheet" href="{% static 'core/css/modal.css' %}">
+{% endblock %}
+
+{% block javascript_top %}
   <script src="{% static 'core/js/phaser.min.js' %}"></script>
   <script src="https://kit.fontawesome.com/b3c2293037.js"></script>
 {% endblock %}
 
 {% block content %}
+  <audio loop muted autoplay id="champions_audio">
+    <source src="{% static 'core/sounds/chamsbgm.mp3' %}" type="audio/mpeg">
+  </audio>
+  <div class="header">
+    {% if user.is_authenticated %}
+      <div class="header__menu">
+        {{ user.last_name }}{{ user.first_name }}님
+      </div>
+      <div class="header__menu" onclick="location.href='{% url 'accounts:logout' %}'">
+        로그아웃
+      </div>
+    {% else %}
+      <div class="header__menu" data-toggle="modal" onclick="loginModalShow()">
+        로그인
+      </div>
+      <div class="header__menu" data-toggle="modal" onclick="signupModalShow()">
+        회원가입
+      </div>
+    {% endif %}
+  </div>
   <div class="swiper-container swiper-container-v">
     <div class="swiper-wrapper">
       <div class="swiper-slide">
@@ -19,12 +43,12 @@
               <div class="first-page__box">
                 <div class="first-page__box-inner">
                   <div>Van Dijk'DOR</div>
-                  <div>반다이크'도르</div>
+                  <div>반 다이크'도르</div>
                 </div>
               </div>
             </div>
             <div class="swiper-slide swiper__second-page"></div>
-            <div class="swiper-slide swiper__first-page"></div>
+            <div class="swiper-slide swiper__third-page"></div>
           </div>
           <div class="swiper-pagination swiper-pagination-h swiper-pagination-progressbar"
                id="swiper-pagination-progressbar__custom"></div>
@@ -32,7 +56,7 @@
       </div>
       <div class="swiper-slide main-slide">
         <div id="main-slide__canvas-wrapper">
-          <canvas id="canvas" tabindex="1" style="z-index: 200;"></canvas>
+          <canvas id="canvas" tabindex="1" style="z-index: 200; border: 1px solid black;"></canvas>
         </div>
       </div>
       <div class="swiper-slide">
@@ -166,10 +190,78 @@
     <!-- Add Pagination -->
     <div class="swiper-pagination swiper-pagination-v swiper-pagination-red"></div>
   </div>
+
+  <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitl"
+       aria-hidden="true">
+    <div class="modal__box">
+      <div class="modal__content">
+        <div class="modal__close-button">
+          <i class="fas fa-times" onclick="closeModal()"></i>
+        </div>
+        <div class="modal__header">
+          로그인
+        </div>
+        <div class="modal__body">
+          <form action="{% url 'accounts:login' %}" class="modal__login-form" method="post">
+            {% csrf_token %}
+            <input type="email" placeholder="이메일" name="email">
+            <input type="password" placeholder="비밀번호" name="password">
+            <div class="modal__form-button-box">
+              <div class="modal__form-button" onclick="signupModalShow()">회원가입</div>
+              <button type="submit" class="modal__form-button">로그인</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-labelledby="login__modal"
+       aria-hidden="true">
+    <div class="modal__box">
+      <div class="modal__content modal__signup">
+        <div class="modal__close-button">
+          <i class="fas fa-times" onclick="closeModal()"></i>
+        </div>
+        <div class="modal__header">
+          회원가입
+        </div>
+        <div class="modal__body">
+          <form action="{% url 'accounts:signup' %}" class="modal__login-form" method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="성" name="last_name">
+            <input type="text" placeholder="이름" name="first_name">
+            <input type="email" placeholder="이메일" name="email">
+            <input type="password" placeholder="비밀번호" name="password">
+            <div class="modal__form-button-box">
+              <div class="modal__form-button" onclick="loginModalShow()">로그인</div>
+              <button type="submit" class="modal__form-button">회원가입</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block javascript_bottom %}
   <script>
+    let loginModalShow = () => {
+      document.querySelector('#signup-modal').classList.remove('modal__fade');
+      document.querySelector('#login-modal').classList.add('modal__fade');
+    };
+
+    let signupModalShow = () => {
+      document.querySelector('#login-modal').classList.remove('modal__fade');
+      document.querySelector('#signup-modal').classList.add('modal__fade');
+    };
+
+    let closeModal = () => {
+      document.querySelector('#signup-modal').classList.remove('modal__fade');
+      document.querySelector('#login-modal').classList.remove('modal__fade');
+    };
+
     let refreshScoreBoard = () => {
       const xhr = new XMLHttpRequest();
       xhr.open("GET", "/api/score/", true);
@@ -206,6 +298,15 @@
 
   <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.9"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+          integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+          integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+          crossorigin="anonymous"></script>
   <script src="{% static 'core/js/main.js' %}"></script>
 
   <script src="{% static 'core/js/phaser.min.js' %}"></script>

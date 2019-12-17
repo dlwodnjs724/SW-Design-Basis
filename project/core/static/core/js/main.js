@@ -1,14 +1,3 @@
-window.onscroll = function () {
-  let currentScrollPos = window.pageYOffset;
-  if (currentScrollPos < 25) {
-    document.querySelector(".header").classList.remove('header__main');
-  } else {
-    document.querySelector(".header").classList.add('header__main');
-  }
-  prevScrollpos = currentScrollPos;
-};
-
-
 // swiper.js
 // var swiper = new Swiper('.swiper-container', {
 //   slidesPerView: 1,
@@ -32,7 +21,7 @@ var swiperH = new Swiper('.swiper-container-h', {
   loop: true,
   speed: 1500,
   autoplay: {
-    delay: 2500,
+    delay: 5000,
     disableOnInteraction: false,
   },
   pagination: {
@@ -56,8 +45,8 @@ var swiperV = new Swiper('.swiper-container-v', {
 // typed.js
 var typed = new Typed('#typed', {
   stringsElement: '#typed-strings',
-  typeSpeed: 50,
-  backSpeed: 50,
+  typeSpeed: 40,
+  backSpeed: 40,
   backDelay: 1000,
   loop: true,
   loopCount: Infinity,

@@ -16,7 +16,20 @@ class EndScene extends Phaser.Scene {
 
   create() {
     this.sendScore(this.score);
-    this.add.text(config.width / 2, config.height / 2, `${this.score}점을 기록하셨습니다.`);
+
+    this.background = this.add.tileSprite(0, 0, config.width, config.height, "whiteBackground");
+    this.background.setOrigin(0, 0);
+
+    this.add.text(config.width / 2, config.height / 3, `${this.score}점을 기록하셨습니다.`, {
+      font: "70px Nanum",
+      color: "black",
+    }).setOrigin(0.5, 0.5);
+
+    this.homeButton = this.add.image(config.width / 2, config.height * 6 / 7, "home").setScale(0.3);
+    this.homeButton.setInteractive();
+    this.homeButton.on("pointerup", () => {
+      this.scene.start("startScene");
+    });
   }
 
   sendScore(score) {
@@ -29,9 +42,9 @@ class EndScene extends Phaser.Scene {
       if (xhr.readyState !== XMLHttpRequest.DONE) return;
       let json = JSON.parse(xhr.response);
       if (xhr.status === 201) {
-        alert(`${score}점을 기록하셨습니다. 스코어 보드에 점수가 기록되었습니다.`);
+        alert(`Ranking Board에 점수가 기록되었습니다.`);
       } else if (xhr.status === 200) {
-        alert(`${score}점을 기록하셨습니다.\n로그인 되어 있지 않아 점수가 기록되지 않습니다.`)
+        alert(`로그인 되어 있지 않아 점수가 기록되지 않습니다.`)
       } else {
         alert(xhr.responseText);
       }

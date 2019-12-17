@@ -4,9 +4,27 @@ html, body {
   height: 100%;
 }
 
+:root {
+  /*--swiper-pagination-color: blue;*/
+  /*--swiper-theme-color: blue;*/
+  --main-color: #007AFF;
+}
+
 .header {
-  background: transparent;
+  width: 100%;
+  height: 60px;
+  padding: 0 5%;
+
+  /*background: rgba(255, 255, 255, 0.4);*/
   position: fixed;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  z-index: 100;
+  border-bottom: 0.1px solid rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease-out 0s;
 }
 
 .header__main {
@@ -14,15 +32,35 @@ html, body {
   color: black !important;
 }
 
-.main__center {
-  height: 100%;
-  position: relative;
+.header__menu {
+  width: 100px;
+  padding: 10px 15px;
+
+  font-family: Nanum;
+  font-size: 17px;
+  border: 1px solid var(--main-color);
+  border-radius: 5px;
+
+  /*background-color: var(--main-color);*/
+  color: var(--main-color);
+  /*color: white;*/
+
+  text-align: center;
+
+  transition: 0.5s all;
+  cursor: pointer;
 }
 
-:root {
-  /*--swiper-pagination-color: blue;*/
-  /*--swiper-theme-color: blue;*/
-  --main-color: #007AFF;
+.header__menu:last-child {
+  margin-left: 10px;
+}
+
+.header__menu:hover {
+  background-color: var(--main-color);
+  color: white;
+
+  /*background-color: white;*/
+  /*color: var(--main-color);*/
 }
 
 .swiper-container {
@@ -47,7 +85,7 @@ html, body {
 
 
 .swiper__first-page {
-  background-image: url("../images/champions_stadium.jpg");
+  background-image: url("../images/rbk.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -58,6 +96,13 @@ html, body {
 }
 
 .swiper__second-page {
+  background-image: url("../images/slide2.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.swiper__third-page {
   background-image: url("../images/champions_white.jpg");
   background-size: cover;
   background-repeat: no-repeat;
@@ -65,7 +110,7 @@ html, body {
 }
 
 .main-slide {
-  background-image: url("../images/beat.jpg");
+  /*background-image: url("../images/beat.jpg");*/
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -119,7 +164,7 @@ html, body {
   margin-bottom: 30px;
 
   display: flex;
-  justify-content: center;
+  justify-content: center !important;
   align-items: center;
   flex-direction: column;
 }

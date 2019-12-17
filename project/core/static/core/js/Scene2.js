@@ -1,77 +1,130 @@
 class Scene2 extends Phaser.Scene {
   constructor() {
     super({
-      key: "playGame",
+      key: "seaScene",
       visible: false,
       active: false
     });
   }
 
   create() {
+    this.anims.create({
+      key: "shark_anim",
+      frames: this.anims.generateFrameNumbers("shark"),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "fish_anim",
+      frames: this.anims.generateFrameNumbers("fish"),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "shrimp_anim",
+      frames: this.anims.generateFrameNumbers("shrimp"),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "hema1_anim",
+      frames: this.anims.generateFrameNumbers("hema1"),
+      frameRate: 20,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "explode",
+      frames: this.anims.generateFrameNumbers("explosion"),
+      frameRate: 20,
+      repeat: 0,
+      hideOnComplete: true
+    });
+
+    this.anims.create({
+      key: "thrust",
+      frames: this.anims.generateFrameNumbers("player"),
+      frameRate: 5,
+      repeat: -1
+    });
+    // 1.2 animation for the beam
+    this.anims.create({
+      key: "beam_anim",
+      frames: this.anims.generateFrameNumbers("beam"),
+      frameRate: 20,
+      repeat: -1
+    });
 
     this.background = this.add.tileSprite(0, 0, config.width, config.height, "background");
     this.background.setOrigin(0, 0);
 
     var graphics = this.add.graphics();
     graphics.fillStyle(0x000000, 1);
-    graphics.beginPath();
-    graphics.moveTo(0, 0);
-    graphics.lineTo(config.width, 0);
-    graphics.lineTo(config.width, 20);
-    graphics.lineTo(0, 20);
-    graphics.lineTo(0, 0);
-    graphics.closePath();
-    graphics.fillPath();
+    // graphics.beginPath();
+    // graphics.moveTo(0, 0);
+    // graphics.lineTo(config.width, 0);
+    // graphics.lineTo(config.width, 20);
+    // graphics.lineTo(0, 20);
+    // graphics.lineTo(0, 0);
+    // graphics.closePath();
+    // graphics.fillPath();
     this.score = 0;
     this.space = 0;
     this.life = 3;
-    this.scoreLabel = this.add.bitmapText(10, 5, "pixelFont", "SCORE", 16);
-    this.spaceLabel = this.add.bitmapText(590, 5, "pixelFont", "ATTACK", 16);
-    this.lifeLabel = this.add.bitmapText(300, 5, "pixelFont", "LIFE", 16);
-    this.lifeLabel.text = "LIFE " + 3;
-    this.spaceLabel.text = "ATTACK " + 0;
 
-    this.beamSound = this.sound.add("audio_beam");
-    this.explosionSound = this.sound.add("audio_explosion");
-    this.pickupSound = this.sound.add("audio_pickup");
+    this.scoreLabel = this.add.bitmapText(280, 47, "pixelFont", "SCORE", 50);
+    this.spaceLabel = this.add.bitmapText(360, 93, "pixelFont", "ATTACK", 40);
+    this.lifeLabel = this.add.bitmapText(263, 93, "pixelFont", "LIFE", 40);
 
-    this.music = this.sound.add("music");
+    this.scoreLabel.setDepth(1);
+    this.lifeLabel.setDepth(1);
+    this.spaceLabel.setDepth(1);
 
-    var musicConfig = {
-      mute: false,
-      volume: 1,
-      rate: 1,
-      detune: 0,
-      seek: 0,
-      loop: false,
-      delay: 0
-    };
+    //color
+    this.lifeLabel.tint = 0x000000;
+    this.scoreLabel.tint = 0x000000;
+    this.spaceLabel.tint = 0x000000;
+
+
+    this.lifeLabel.text = " " + 3;
+    this.spaceLabel.text = " " + 0;
+    this.scoreLabel.text = " " + 0;
+
+
+    this.beamSound = this.sound.add("audio_beam", {volume: 0.3});
+    this.explosionSound = this.sound.add("audio_explosion", {volume: 0.3});
+    this.pickupSound = this.sound.add("audio_pickup", {volume: 0.3});
+    this.bkMusic = this.sound.add("babyshark");
+    this.bkMusic.play({
+      volume: 0.35,
+      loop: true
+    });
+    // this.music = this.sound.add("music");
 
     this.scoreboard = this.add.sprite(0, 0, "scoreboard").setOrigin(0, 0);
-    this.ship1 = this.add.sprite(config.width / 2 - 50, config.height / 3, "ship");
-    this.ship2 = this.add.sprite(config.width / 2, config.height * 2 / 3, "ship2");
-    this.ship3 = this.add.sprite(config.width / 2 + 50, config.height * 3 / 3, "ship3");
+    this.shark = this.add.sprite(config.width / 2 - 50, config.height / 3, "shark");
+    this.fish = this.add.sprite(config.width / 2, config.height * 2 / 3, "fish");
+    this.shrimp = this.add.sprite(config.width / 2 + 50, config.height * 3 / 3, "shrimp");
 
-    //this.ship1.angle += 90;
-    //this.ship2.angle += 90;
-    //this.ship3.angle += 90;
+    //this.shark.angle += 90;
+    //this.fish.angle += 90;
+    //this.shrimp.angle += 90;
 
     this.enemies = this.physics.add.group();
-    this.enemies.add(this.ship1);
-    this.enemies.add(this.ship2);
-    this.enemies.add(this.ship3);
+    this.enemies.add(this.shark);
+    this.enemies.add(this.fish);
+    this.enemies.add(this.shrimp);
 
 
-    this.ship1.play("ship1_anim");
-    this.ship2.play("ship2_anim");
-    this.ship3.play("ship3_anim");
+    this.shark.play("shark_anim");
+    this.fish.play("fish_anim");
+    this.shrimp.play("shrimp_anim");
 
-    this.ship1.setInteractive();
-    this.ship2.setInteractive();
-    this.ship3.setInteractive();
-    this.ship1.body.setAllowGravity(false);
-    this.ship2.body.setAllowGravity(false);
-    this.ship3.body.setAllowGravity(false);
+    this.shark.setInteractive();
+    this.fish.setInteractive();
+    this.shrimp.setInteractive();
+    this.shark.body.setAllowGravity(false);
+    this.fish.body.setAllowGravity(false);
+    this.shrimp.body.setAllowGravity(false);
 
     this.input.on('gameobjectdown', this.destroyShip, this);
 
@@ -84,25 +137,6 @@ class Scene2 extends Phaser.Scene {
 
     this.physics.world.setBoundsCollision();
 
-    this.powerUps = this.physics.add.group();
-
-
-    for (var i = 0; i < gameSettings.maxPowerups; i++) {
-      var powerUp = this.physics.add.sprite(16, 16, "power-up");
-      this.powerUps.add(powerUp);
-      powerUp.setRandomPosition(0, 0, game.config.width, game.config.height);
-
-      if (Math.random() > 0.5) {
-        powerUp.play("red");
-      } else {
-        powerUp.play("gray");
-      }
-
-      powerUp.setVelocity(gameSettings.powerUpVel, gameSettings.powerUpVel);
-      powerUp.setCollideWorldBounds(true);
-      powerUp.setBounce(0.7);
-
-    }
 
     this.player = this.physics.add.sprite(70, config.height, "player");
     this.player.play("thrust");
@@ -116,27 +150,15 @@ class Scene2 extends Phaser.Scene {
     this.projectiles = this.add.group();
 
 
-    this.physics.add.collider(this.projectiles, this.powerUps, function (projectiles, powerUp) {
-      projectiles.destroy();
-    });
-    this.physics.add.overlap(this.player, this.powerUps, this.pickPowerUp, null, this);
     this.physics.add.overlap(this.player, this.enemies, this.hurtPlayer, null, this);
     this.physics.add.overlap(this.projectiles, this.enemies, this.hitEnemy, null, this);
-
-
   }
 
-  pickPowerUp(player, powerUp) {
-    powerUp.disableBody(true, true);
-    this.pickupSound.play();
-  }
 
   hurtPlayer(player, enemy) {
-
-
     this.life -= 1;
     var lifeFormated = this.zeroPad(this.life, 1);
-    this.lifeLabel.text = "LIFE " + lifeFormated;
+    this.lifeLabel.text = " " + lifeFormated;
 
     this.resetShipPos(enemy);
 
@@ -164,8 +186,8 @@ class Scene2 extends Phaser.Scene {
     projectiles.destroy();
     this.resetShipPos(enemy);
     this.score += 15;
-    var scoreFormated = this.zeroPad(this.score, 6);
-    this.scoreLabel.text = "SCORE " + scoreFormated;
+    var scoreFormated = this.zeroPad(this.score, 1);
+    this.scoreLabel.text = " " + scoreFormated;
     this.explosionSound.play();
   }
 
@@ -202,12 +224,12 @@ class Scene2 extends Phaser.Scene {
     let speed1 = 5;
     let speed2 = 6;
     let speed3 = 7;
-    this.moveShip(this.ship1, speed1 + speed1 * acceleration);
-    this.moveShip(this.ship2, speed2 + speed2 * acceleration);
-    this.moveShip(this.ship3, speed3 + speed3 * acceleration);
-    // this.ship1.alpha = 0;
-    // this.ship2.alpha = 0;
-    // this.ship3.alpha = 0;
+    this.moveShip(this.shark, speed1 + speed1 * acceleration);
+    this.moveShip(this.fish, speed2 + speed2 * acceleration);
+    this.moveShip(this.shrimp, speed3 + speed3 * acceleration);
+    // this.shark.alpha = 0;
+    // this.fish.alpha = 0;
+    // this.shrimp.alpha = 0;
 
     this.background.tilePositionX += 5;
 
@@ -230,6 +252,7 @@ class Scene2 extends Phaser.Scene {
     }
 
     if (this.life <= 0) {
+      this.bkMusic.stop();
       this.scene.start("endScene", {
         score: this.score
       });
@@ -243,7 +266,7 @@ class Scene2 extends Phaser.Scene {
 
     this.space += 1;
     var spaceFormated = this.zeroPad(this.space, 1);
-    this.spaceLabel.text = "ATTACK " + spaceFormated;
+    this.spaceLabel.text = " " + spaceFormated;
 
     this.beamSound.play();
   }
@@ -252,6 +275,16 @@ class Scene2 extends Phaser.Scene {
   movePlayerManager() {
 
     this.player.setVelocity(0);
+
+    // this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    //
+    // if (this.keyW.isDown) {
+    //   console.log(1);
+    //   this.sound.add("babyshark").play({
+    //     volume: 1,
+    //     loop: true
+    //   });
+    // }
 
     if (this.cursorKeys.left.isDown) {
       this.player.setVelocityX(-gameSettings.playerSpeed);
